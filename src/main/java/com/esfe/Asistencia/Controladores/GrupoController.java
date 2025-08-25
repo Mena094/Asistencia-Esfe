@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.esfe.Asistencia.Modelos.Grupo;
 import com.esfe.Asistencia.Servicios.Interfaces.IGrupoService;
+import com.esfe.Asistencia.Utilidades.EmailService;
 
 import jakarta.validation.Valid;
 
@@ -32,6 +33,8 @@ public class GrupoController {
 
     @Autowired
     private IGrupoService grupoService;
+    @Autowired
+    private  EmailService emailService;
 
     @GetMapping
     public String index(Model model,
@@ -100,6 +103,11 @@ public class GrupoController {
             return "grupo/mant";
         }
         grupoService.crearOeditar(grupo);
+          emailService.enviarCorreo(
+                "walter.mena@esfe.agape.edu.sv",
+                "Nuevo Grupo Creado",
+                "Se ha creado el grupo: " + grupo.getNombre()
+        );
         redirect.addFlashAttribute("msg", "Grupo creado correctamente");
         return "redirect:/grupos";
     }
